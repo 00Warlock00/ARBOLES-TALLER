@@ -1,0 +1,129 @@
+#include<iostream>
+#include<malloc.h>
+#include<cstring>
+#include<limits>
+using namespace std;
+
+struct RNT{
+	char codigo [30];
+	char nombre [30];
+	char fecha [30];
+	RNT*izq, *der;	
+}; 
+RNT *raiz=NULL,*raiz2=NULL,*aux, *aux2;
+
+//prototipos
+
+void insertar(RNT &,RNT, bool (*comparar)(const char *, const char *));
+void registrar(RNT *&,RNT *&);
+void liberarMemoria(RNT*);
+void salir();
+
+
+
+//funcion para insertar elementos a la raiz(arbol)
+void insertar(RNT *&raiz,RNT *aux, bool (*comparar)(const char *, const char *)){
+
+if(raiz==NULL){
+
+raiz = aux;
+
+}else if (comparar(aux->codigo, raiz->codigo)){
+
+insertar(raiz->izq, aux, comparar);
+
+
+}else{
+
+insertar(raiz->der, aux, comparar);
+
+}
+
+}
+bool CompararPorCodigo(const char *codigo1, const char *codigo2)
+{
+    return strcmp(codigo1, codigo2) < 0;
+}
+
+bool CompararPorFecha(const char *fecha1, const char *fecha2)
+{
+    return strcmp(fecha1, fecha2) < 0;
+}
+
+
+void registrar(RNT *&raiz,RNT *&raiz2){
+
+	aux = ((struct RNT*)malloc(sizeof(struct RNT)));
+	cout<<"\t  PARA PODER VALIDAR TU ENTIDAD NECESITO"<<endl;
+    cout<<"INGRESE EL NOMBRE DE SU ENTIDAD(EMPRESA)\n";cin>>aux->nombre;
+    cout<<"INGRESE EL CODIGO RELACIONADO A SU ENTIDAD (MAX 6)\n";cin>>aux->codigo;
+    cout<<"INGRESE LA FECHA DE VENCIMIENTO \n";cin>>aux->fecha;
+    
+    // Agrega el estudiante a arbolPorCodigo
+   insertar(raiz,aux,CompararPorCodigo);
+    // Agrega el estudiante a arbolPorFecha
+    
+    aux2 = ((struct RNT*)malloc(sizeof(struct RNT)));
+  memcpy(aux2, aux, sizeof(RNT));
+   insertar(raiz2,aux2,CompararPorFecha);
+
+  cout << " Registrado exitosamente." << endl;
+
+
+}//fin metodo
+int preorden(RNT *recusive){
+
+     cout << "Codigo: " <<aux->codigo << ", Nombre: " << aux->nombre << ", Fecha: " << aux2->fecha << endl;
+     
+    
+if(recusive->izq!=NULL)
+preorden(recusive->izq);
+
+if(recusive->der!=NULL)
+preorden(recusive->der);
+
+}
+int recorrer(){
+if(raiz!=NULL){
+preorden(raiz);
+}
+
+if(raiz2!=NULL){
+preorden(raiz2);
+}
+return 0;
+
+}
+
+
+int main(){
+	
+    int opc=0;
+    do{
+         cout << "\nMenu:\n";
+        cout << "1. Registrar \n";
+        cout << "2. Mostrar recorrido preorden \n";
+        cout << "3. salir\n";
+        
+
+        cin >> opc;
+        cout << endl;
+
+        switch (opc) {
+            case 1:
+                registrar(raiz,raiz2);
+                break;
+
+            case 2:
+               recorrer();
+                break;
+
+           
+ case 3:
+                
+                break;
+            default:
+                cout << "Opción inválida. Por favor, ingrese una opción válida." << endl;
+                break;
+        }
+    }while(opc!=3);
