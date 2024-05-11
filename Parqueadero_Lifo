@@ -1,0 +1,235 @@
+#include <iostream>
+#include <malloc.h>
+using namespace std;
+
+struct nodo {
+    int tipo;
+    int placa  ;
+        
+    struct nodo *sig;
+}; 
+
+struct nodo *top=NULL, *aux, *aux2 ,*top2=NULL; 
+int  Ndecarros=0, Ndemotos=0, CM=0,CC=0;
+
+int registrar(){
+    
+    
+    aux = ((struct nodo *) malloc(sizeof(struct nodo))); 
+    cout << "Tipo de vehiculo (1.auto/2.moto): ";
+    cin >> aux->tipo;
+    cout<<"ingrese la placa del vehiculo"<<endl;
+    cin>>aux->placa;
+   
+   if (aux->tipo==1) {
+
+         if(top==NULL){
+    
+        top = aux;
+        top->sig = NULL;
+    } else {
+      
+        aux->sig = top;
+        top = aux;
+    }
+ Ndecarros++;
+    aux = NULL;
+    free(aux);
+
+    } 
+    else if (aux->tipo==2) { 
+        
+      
+         if(top2==NULL){
+    
+        top2 = aux;
+        top2->sig = NULL;
+    } else {
+      
+        aux->sig = top2;
+        top2 = aux;
+    }
+    Ndemotos++;
+ }else {
+        cout << "Tipo de vehículo no válido." << endl;
+       
+    }
+
+
+   
+return 0;
+
+}
+int mostrar(){
+ 
+    cout<<"CARROS"<<endl;
+    aux=top;
+    while(aux!=NULL){
+       
+        cout<<aux->placa<<endl;
+        aux=aux->sig;
+
+
+    }
+
+    
+    cout<<"MOTOS"<<endl;
+    aux=top2;
+    while(aux!=NULL){
+       
+        cout<<aux->placa<<endl;
+        aux=aux->sig;
+
+
+    }
+
+return 0;
+
+
+
+    }
+
+
+int eliminar() {
+    if (top == NULL) {
+        cout << "El parqueadero está vacío." << endl;
+        return 0;
+    }
+
+    int opc=0;
+    cout<<"ingrese el tipo d vehiculo que desea retirar"<<endl;
+    cout<<"1. CARROS"<<"2. MOTOS"<<endl;
+    cin>>opc;
+if(opc==1){
+    int placaeli=0;
+    mostrar();
+    cout << "Ingrese el número de la placa del vehiculo a eliminar:  ";
+    cin >> placaeli;
+    nodo*ant=NULL;
+    aux = top;
+  
+    while (aux != NULL&& aux->placa!=placaeli) {
+        ant = aux;
+         aux= aux->sig;
+        
+           CC++;
+        }
+        cout<<"se movieron"<<CC <<endl;
+       if(aux == NULL){
+            cout << "No se encontró ningún carro con esa placa." << endl;
+            return 0;
+        }
+        if(ant == NULL){
+            top = aux->sig;
+        } else {
+            ant->sig = aux->sig;
+        }
+        free(aux);
+        cout << "El carro con placa " << placaeli << " ha sido retirado correctamente." << endl;  
+       }
+if(opc==2){
+    int placaeli=0;
+    mostrar();
+    cout << "Ingrese el número de la placa del vehiculo a eliminar:  ";
+    cin >> placaeli;
+    nodo*ant=NULL;
+    aux = top2;
+  
+    while (aux != NULL&& aux->placa!=placaeli) {
+        ant = aux;
+         aux= aux->sig;
+        
+           CM++;
+        }
+        cout<<"se movieron  "<< CM <<endl;
+       if(aux == NULL){
+            cout << "No se encontro ningun moto con esa placa." << endl;
+            return 0;
+        }
+        if(ant == NULL){
+            top2 = aux->sig;
+        } else {
+            ant->sig = aux->sig;
+        }
+        free(aux);
+        cout << "La moto  con placa " << placaeli << " ha sido retirado correctamente." << endl;  
+       }
+
+
+
+    }
+   int calcular(){
+ 
+
+int totalc=0,totalm=0, totalv=0,coborestacionarcarro=0,Cobromovimientocarro=0,coborestacionarmoto=0,
+Cobromovimientomoto=0;
+
+
+coborestacionarcarro=(Ndecarros*5000);
+Cobromovimientocarro=(CC*2500);
+
+coborestacionarmoto=(Ndemotos*2500);
+Cobromovimientomoto=(CM*500);
+
+totalm=(Ndemotos*2500)+(CM*500);
+totalc= (Ndecarros*5000)+(CC*2500);
+//total de parquear y mover  motos y carros
+totalv= totalc+totalm;
+
+
+
+
+cout<<"--Total Ganado--"<<endl;
+cout<<"Carros: $"<<coborestacionarcarro<<endl;
+cout<<"Motos: $"<<coborestacionarmoto<<endl; 
+cout<<"Cobro por movimiento de  Carros: $"<<Cobromovimientocarro<<endl;
+cout<<"Cobro por movimiento de  Motos: $"<<Cobromovimientomoto<<endl; 
+cout<<"Total Ganado: $"<<totalv<<endl; 
+
+return 0;
+
+}
+
+
+
+
+
+
+int main(){
+    int opc=0;
+    do{
+         cout << "\nMenu:\n";
+        cout << "1. Registrar vehiculo\n";
+        cout << "2. Mostrar registros\n";
+        cout << "3. Eliminar vehiculo \n";
+        cout << "4. Dinero consegido \n";
+        cout << "5. Salir\n";
+
+        cin >> opc;
+        cout << endl;
+
+        switch (opc) {
+            case 1:
+                registrar();
+                break;
+
+            case 2:
+                mostrar();
+                break;
+
+            case 3:
+                eliminar();
+                break;
+
+            case 4:
+                calcular();
+                break;
+ case 5:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opción inválida. Por favor, ingrese una opción válida." << endl;
+                break;
+        }
+    }while(opc!=5);   
+}
