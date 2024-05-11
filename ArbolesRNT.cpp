@@ -1,11 +1,9 @@
 #include <iostream>
 #include <malloc.h>
-#include <cstring>
 using namespace std;
 
 struct rtn
 {
-    char nombre[40];
     long codigo;
     int anio, mes, dia;
     rtn *izq;
@@ -122,8 +120,6 @@ int registrar()
 
     aux = ((struct rtn *)malloc(sizeof(struct rtn)));
 
-    cout << " Nombre de la entidad (maximo 30 caracteres):\n";
-    cin >> aux->nombre;
     cout << " codigo de la entidad RNT: " << endl;
     cin >> aux->codigo;
     cout << " Año de la fecha de la entidad RNT: " << endl;
@@ -163,113 +159,66 @@ int registrar()
 // Función para recorrer el árbol en preorden
 void recorridoPreordenCodigo(rtn *nodo)
 {
-
     if (nodo != NULL)
     {
-        // Mostramos los datos del nodo
-        cout << "Codigo: " << nodo->codigo << " "
-             << " Nombre: " nodo->nombre << "\n";
-        // Recorremos el subárbol izquierdo
+        cout << "Codigo: " << nodo->codigo << "\n ";
         recorridoPreordenCodigo(nodo->izq);
-        // Recorremos el subárbol derecho
         recorridoPreordenCodigo(nodo->der);
     }
 }
 void recorridoInordenCodigo(rtn *orden)
 {
-
     if (orden != NULL)
     {
-        if (orden->izq != NULL)
-        {
-            recorridoInordenCodigo(orden->izq);
-            cout << "Codigo: " << orden->codigo << " "
-                 << " Nombre: " orden->nombre << "\n";
-        }
-        else
-        {
-            if (orden->der != NULL)
-            {
-                recorridoInordenCodigo(orden->der);
-                cout << "Codigo: " << orden->codigo << " "
-                     << " Nombre: " << orden->nombre << "\n";
-            }
-        }
+        recorridoInordenCodigo(orden->izq);
+        cout << "Codigo: " << orden->codigo << "\n ";
+        recorridoInordenCodigo(orden->der);
     }
 } // fin metodo.
+
 
 void recorridoPostordenCodigo(rtn *sett)
 {
     if (sett != NULL)
     {
-        if (sett->izq != NULL)
-        {
-            recorridoInordenCodigo(sett->izq);
-        }
-        else
-        {
-            if (sett->der != NULL)
-            {
-                recorridoInordenCodigo(sett->der);
-            }
-        }
+        recorridoPostordenCodigo(sett->izq);
+        recorridoPostordenCodigo(sett->der);
+        cout << "Codigo: " << sett->codigo << "\n ";
     }
-    cout << "Codigo: " << sett->codigo << " "
-         << " Nombre:" << sett->nombre << "\n";
-    return;
-} // fin metodo.
+}// fin metodo.
 
 // fin recorridos por Codigo.
 
-void recorridoPreordenFecha(rtn *add)
+void recorridoPreordenFecha(rtn *nodo)
 {
-    if (add != NULL)
+    if (nodo != NULL)
     {
-        cout << "FECHA: " << add->anio << "/" << add->mes << "/" << add->dia << "/"
-             << " "
-             << " Nombre:" << add->nombre "\n";
-        recorridoPreordenFecha(add->izq);
-        recorridoPreordenFecha(add->der);
-    }
-
-} // fin metodo.
-
-void recorridoInordenFecha(rtn *add2)
-{
-    if (add2->izq != NULL)
-    {
-        recorridoInordenFecha(add2->izq);
-        cout << "FECHA: " << add2->anio << "/" << add2->mes << "/" << add2->dia << "/"
-             << " "
-             << " Nombre:" << add2->nombre << "\n";
-    }
-    else
-    {
-        if (add2->der != NULL)
-        {
-            recorridoInordenFecha(add2->der);
-            cout << "FECHA: " << add2->anio << "/" << add2->mes << "/" << add2->dia << "/"
-                 << " "
-                 << " Nombre:" << add2->nombre << "\n";
-        }
+        cout << "FECHA: " << nodo->anio << "/" << nodo->mes << "/" << nodo->dia << "/"
+             << "\n ";
+        recorridoPreordenFecha(nodo->izq);
+        recorridoPreordenFecha(nodo->der);
     }
 } // fin metodo.
 
-void recorridoPostordenFecha(rtn *add3)
+void recorridoInordenFecha(rtn *nodo)
 {
-    if (add3->izq != NULL)
+    if (nodo != NULL)
     {
-        recorridoPostordenFecha(add3->izq);
+        recorridoInordenFecha(nodo->izq);
+        cout << "FECHA: " << nodo->anio << "/" << nodo->mes << "/" << nodo->dia << "/"
+             << "\n ";
+        recorridoInordenFecha(nodo->der);
     }
-    else
+}// fin metodo.
+
+void recorridoPostordenFecha(rtn *nodo)
+{
+    if (nodo != NULL)
     {
-        if (add3->der != NULL)
-        {
-            recorridoPostordenFecha(add3->der);
-        }
-        cout << "FECHA: " << add3->anio << "/" << add3->mes << "/" << add3->dia << "/"
-             << " "
-             << " Nombre: " << add3->nombre << "\n";
+        recorridoPostordenFecha(nodo->izq);
+        recorridoPostordenFecha(nodo->der);
+        cout << "FECHA: " << nodo->anio << "/" << nodo->mes << "/" << nodo->dia << "/"
+             << "\n ";
     }
 } // fin metodo.
 // fin metodos por Fecha.
@@ -313,7 +262,7 @@ void EliminarArbolCodigo(rtn *co, int eliminar)
                 {
                     temp = temp->izq;
                 }
-                co->nombre = temp->nombre;
+
                 co->codigo = temp->codigo;
                 co->anio = temp->anio;
                 co->mes = temp->mes;
@@ -331,6 +280,7 @@ void EliminarArbolFecha(rtn *nodo, int anio, int mes, int dia)
     {
         return;
     }
+
     if (anio < nodo->anio)
     {
         EliminarArbolFecha(nodo->izq, anio, mes, dia);
@@ -376,7 +326,7 @@ void EliminarArbolFecha(rtn *nodo, int anio, int mes, int dia)
             {
                 temp = temp->izq;
             }
-            nodo->nombre = temp->nombre;
+
             nodo->codigo = temp->codigo;
             nodo->anio = temp->anio;
             nodo->mes = temp->mes;
@@ -389,7 +339,7 @@ void EliminarArbolFecha(rtn *nodo, int anio, int mes, int dia)
 
 int main()
 {
-    int anio = 0, mes = 0, dia = 0, eliminar = 0;
+    int anio = 0, mes = 0, dia = 0,codigo=0;
     int opc = 0, subOpc = 0, subOpc2 = 0;
     do
     {
@@ -445,16 +395,26 @@ int main()
             break;
 
         case 3:
+
             cout << "1.\tELIMINAR NODO CODIGO\n";
             cout << "2.\tELIMINAR NODO FECHA\n";
             cin >> subOpc2;
             switch (subOpc2)
             {
             case 1:
-                EliminarArbolCodigo(raizCodigo, eliminar);
+            cout<<"DIGITE EL CODIGO A ELIMINAR\n";
+            cin>>codigo;
+                EliminarArbolCodigo(raizCodigo, codigo);
                 cout << "NODO ELIMINADO SATISFACTORIAMENTE" << endl;
                 break;
             case 2:
+                cout << "\tDIGITE LA FECHA A ELIMINAR(SE BORRA TODO CON LA FECHA)\n";
+                cout << "AÑO\n";
+                cin >> anio;
+                cout << "MES\n";
+                cin >> mes;
+                cout << "DIA\n";
+                cin >> dia;
                 EliminarArbolFecha(raizFecha, anio, mes, dia);
                 cout << "NODO ELIMINADO SATISFACTORIAMENTE" << endl;
                 break;
