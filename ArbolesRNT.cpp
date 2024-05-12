@@ -6,6 +6,7 @@ struct rtn
 {
     long codigo;
     int anio, mes, dia;
+    int categoria;
     rtn *izq;
     rtn *der;
 };
@@ -114,44 +115,142 @@ int posicionararbolFecha(rtn *aux2)
     }
     return 0;
 }
+void NodosCategoria(rtn *aux3, int categoria)
+{
+    if (aux3 != NULL)
+    {
+        if (aux3->categoria == categoria)
+        {
+            cout << " CODIGO: " << aux3->codigo << "  " << " FECHA: " << "" << aux3->anio << "/" << aux3->mes << "/" << aux3->dia << "\n";
+        }
+        NodosCategoria(aux3->izq, categoria);
+        NodosCategoria(aux3->der, categoria);
+    }
+}
+void MostrarCategoria()
+{
+
+    int mostrar = 0;
+    do
+    {
+        cout << "\tSE MOSTRARAN LAS EMPRESAS DE ACUERDO A LA OPCION DIGITADA\n";
+        cout << "\nCATEGORIAS:\n";
+        cout << "1.HOSPEDAJE\n";
+        cout << "2.TRANSPORTE\n";
+        cout << "3.GASTRONOMIA\n";
+        cout << "4.SALIR\n";
+        cout << "OPCION:\n";
+        cin >> mostrar;
+
+        switch (mostrar)
+        {
+        case 1:
+            cout << "HOSPEDAJE\n";
+            NodosCategoria(raizCodigo, 1);
+            break;
+        case 2:
+            cout << "TRANSPORTE\n";
+            NodosCategoria(raizCodigo, 2);
+            break;
+        case 3:
+            cout << "GASTRONOMIA\n";
+            NodosCategoria(raizCodigo, 3);
+            break;
+        case 4:
+            cout << "BYE BYE\n";
+            break;
+        default:
+            cout << "OPCION INVALIDA\n";
+            break;
+        }
+    } while (mostrar != 4);
+}
 
 int registrar()
 {
-
+    int categoria = 0;
     aux = ((struct rtn *)malloc(sizeof(struct rtn)));
 
-    cout << " codigo de la entidad RNT: " << endl;
-    cin >> aux->codigo;
-    cout << " Año de la fecha de la entidad RNT: " << endl;
-    cin >> aux->anio;
-    cout << " Mes de la fecha de la entidad RNT: " << endl;
-    cin >> aux->mes;
-    cout << " Dia de la fecha de la entidad RNT: " << endl;
-    cin >> aux->dia;
-
-    aux->izq = aux->der = NULL;
-    if (raizCodigo == NULL)
-    {
-        raizCodigo = aux;
-        aux = NULL;
-    }
-    else
+    do
     {
 
-        posicionararbolCodigo(raizCodigo);
-    }
+        cout << " \tIngrese categoria a la que pertenece\n";
+        cout << "1. HOSPEDAJE\n";
+        cout << "2. TRANSPORTE\n";
+        cout << "3. GASTRONOMIA\n";
+        cout << "OPCION: ";
+        cin >> categoria;
 
-    // Si la raíz2 está vacía, el nuevo nodo será la raíz2
-    if (raizFecha == NULL)
-    {
-        raizFecha = aux;
-    }
-    else
-    {
-        posicionararbolFecha(raizFecha);
-    }
+        switch (categoria)
+        {
+        case 1:
+            aux->categoria = 1;
+            break;
+        case 2:
+            aux->categoria = 2;
+            break;
+        case 3:
+            aux->categoria = 3;
+            break;
+        default:
+            cout << "Opción inválida. Por favor, ingrese una opción válida.\n";
+            return 0;
+        }
 
-    return 0;
+        cout << " codigo de la entidad RNT: " << endl;
+        cin >> aux->codigo;
+        cout << " Año de la fecha de la entidad RNT: " << endl;
+        do
+        {
+            cin >> aux->anio;
+            if (aux->anio < 1900 || aux->anio > 2024)
+            {
+                cout << "Año inválido. Ingrese un año entre 1900 y 2024: ";
+            }
+        } while (aux->anio < 1900 || aux->anio > 2024);
+        cout << " Mes de la fecha de la entidad RNT: " << endl;
+        do
+        {
+            cin >> aux->mes;
+            if (aux->mes < 1 || aux->mes > 12)
+            {
+                cout << "Mes inválido. Ingrese un mes entre 1 y 12: ";
+            }
+        } while (aux->mes < 1 || aux->mes > 12);
+        cout << " Dia de la fecha de la entidad RNT: " << endl;
+        do
+        {
+            cin >> aux->dia;
+            if (aux->dia < 1 || aux->dia > 31)
+            {
+                cout << "Día inválido. Ingrese un día entre 1 y 31: ";
+            }
+        } while (aux->dia < 1 || aux->dia > 31);
+
+        aux->izq = aux->der = NULL;
+        if (raizCodigo == NULL)
+        {
+            raizCodigo = aux;
+            aux = NULL;
+        }
+        else
+        {
+
+            posicionararbolCodigo(raizCodigo);
+        }
+
+        // Si la raíz2 está vacía, el nuevo nodo será la raíz2
+        if (raizFecha == NULL)
+        {
+            raizFecha = aux;
+        }
+        else
+        {
+            posicionararbolFecha(raizFecha);
+        }
+
+        return 0;
+    } while (categoria != 4);
 }
 
 // ordenamientos por codigo.
@@ -176,7 +275,6 @@ void recorridoInordenCodigo(rtn *orden)
     }
 } // fin metodo.
 
-
 void recorridoPostordenCodigo(rtn *sett)
 {
     if (sett != NULL)
@@ -185,7 +283,7 @@ void recorridoPostordenCodigo(rtn *sett)
         recorridoPostordenCodigo(sett->der);
         cout << "Codigo: " << sett->codigo << "\n ";
     }
-}// fin metodo.
+} // fin metodo.
 
 // fin recorridos por Codigo.
 
@@ -209,7 +307,7 @@ void recorridoInordenFecha(rtn *nodo)
              << "\n ";
         recorridoInordenFecha(nodo->der);
     }
-}// fin metodo.
+} // fin metodo.
 
 void recorridoPostordenFecha(rtn *nodo)
 {
@@ -222,6 +320,19 @@ void recorridoPostordenFecha(rtn *nodo)
     }
 } // fin metodo.
 // fin metodos por Fecha.
+
+bool buscarNodoPorCodigo(rtn *nodo, int codigo)
+{
+    if (nodo == NULL)
+    {
+        return false;
+    }
+    if (nodo->codigo == codigo)
+    {
+        return true;
+    }
+    return buscarNodoPorCodigo(nodo->izq, codigo) || buscarNodoPorCodigo(nodo->der, codigo);
+}
 
 void EliminarArbolCodigo(rtn *co, int eliminar)
 {
@@ -272,6 +383,19 @@ void EliminarArbolCodigo(rtn *co, int eliminar)
         }
     }
     return;
+}
+
+bool buscarNodoPorFecha(rtn *nodo, int anio, int mes, int dia)
+{
+    if (nodo == NULL)
+    {
+        return false;
+    }
+    if (nodo->anio == anio && nodo->mes == mes && nodo->dia == dia)
+    {
+        return true;
+    }
+    return buscarNodoPorFecha(nodo->izq, anio, mes, dia) || buscarNodoPorFecha(nodo->der, anio, mes, dia);
 }
 
 void EliminarArbolFecha(rtn *nodo, int anio, int mes, int dia)
@@ -339,15 +463,16 @@ void EliminarArbolFecha(rtn *nodo, int anio, int mes, int dia)
 
 int main()
 {
-    int anio = 0, mes = 0, dia = 0,codigo=0;
-    int opc = 0, subOpc = 0, subOpc2 = 0;
+    int anio = 0, mes = 0, dia = 0, codigo = 0;
+    int opc = 0, subOpc = 0, subOpc2 = 0, categoria = 0;
     do
     {
         cout << "\tMENU:\n";
         cout << "1. REGISTRAR \n";
         cout << "2. MOSTRAR RECORRIDOS\n";
-        cout << "3. ELIMINAR NODO\n";
-        cout << "4. SALIR\n";
+        cout << "3. MOSTRAR CATEGORIAS\n";
+        cout << "4. ELIMINAR NODO\n";
+        cout << "5. SALIR\n";
 
         cin >> opc;
         cout << endl;
@@ -395,31 +520,57 @@ int main()
             break;
 
         case 3:
+            MostrarCategoria();
+            break;
 
+        case 4:
             cout << "1.\tELIMINAR NODO CODIGO\n";
             cout << "2.\tELIMINAR NODO FECHA\n";
             cin >> subOpc2;
-            switch (subOpc2)
+
+            if (subOpc2 == 1 || subOpc2 == 2)
             {
-            case 1:
-            cout<<"DIGITE EL CODIGO A ELIMINAR\n";
-            cin>>codigo;
-                EliminarArbolCodigo(raizCodigo, codigo);
-                cout << "NODO ELIMINADO SATISFACTORIAMENTE" << endl;
-                break;
-            case 2:
-                cout << "\tDIGITE LA FECHA A ELIMINAR(SE BORRA TODO CON LA FECHA)\n";
-                cout << "AÑO\n";
-                cin >> anio;
-                cout << "MES\n";
-                cin >> mes;
-                cout << "DIA\n";
-                cin >> dia;
-                EliminarArbolFecha(raizFecha, anio, mes, dia);
-                cout << "NODO ELIMINADO SATISFACTORIAMENTE" << endl;
-                break;
+                switch (subOpc2)
+                {
+                case 1:
+                    cout << "DIGITE EL CODIGO A ELIMINAR\n";
+                    cin >> codigo;
+                    if (buscarNodoPorCodigo(raizCodigo, codigo))
+                    {
+                        EliminarArbolCodigo(raizCodigo, codigo);
+                        cout << "NODO ELIMINADO SATISFACTORIAMENTE" << endl;
+                    }
+                    else
+                    {
+                        cout << "EL CODIGO INGRESADO NO EXISTE" << endl;
+                    }
+                    break;
+                case 2:
+                    cout << "\tDIGITE LA FECHA A ELIMINAR(SE BORRA TODO CON LA FECHA)\n";
+                    cout << "AÑO\n";
+                    cin >> anio;
+                    cout << "MES\n";
+                    cin >> mes;
+                    cout << "DIA\n";
+                    cin >> dia;
+                    if (buscarNodoPorFecha(raizFecha, anio, mes, dia))
+                    {
+                        EliminarArbolFecha(raizFecha, anio, mes, dia);
+                        cout << "NODO ELIMINADO SATISFACTORIAMENTE" << endl;
+                    }
+                    else
+                    {
+                        cout << "LA FECHA INGRESADA NO EXISTE" << endl;
+                    }
+                    break;
+                }
             }
-        case 4:
+            else
+            {
+                cout << "Opción inválida. Por favor, ingrese una opción válida.\n";
+            }
+            break;
+        case 5:
             cout << "BYE BYE.\n"
                  << endl;
             break;
@@ -428,6 +579,6 @@ int main()
                  << endl;
             break;
         }
-    } while (opc != 4);
+    } while (opc != 5);
     return 0;
 }
